@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 
 export class AddEmployeePage {
+  // Initializes the AddEmployeePage with page locators for form and table elements.
   constructor(page) {
     this.page = page;
 
@@ -18,33 +19,37 @@ export class AddEmployeePage {
     this.table = page.locator('table.-striped.-highlight.table.table-striped.table-bordered.table-hover');
   }
 
+  // Navigates to the demoqa webtables page and waits for the add button to be visible.
   async navigate() {
     await this.page.goto('https://demoqa.com/webtables');
     await expect(this.addButton).toBeVisible();
   }
 
+  // Clicks the add button to open the employee addition form.
   async openAddForm() {
     await this.addButton.click();
     await expect(this.firstNameInput).toBeVisible();
   }
 
+  // Fills the employee form with provided details and verifies the input values.
   async fillForm({ firstName, lastName, email, age, salary, department }) {
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
     await this.emailInput.fill(email);
-    await this.ageInput.fill(age.toString());
-    await this.salaryInput.fill(salary.toString());
+    await this.ageInput.fill(age.toString()); // Convert age number to string for input filling
+    await this.salaryInput.fill(salary.toString()); // Convert salary number to string for input filling
     await this.departmentInput.fill(department);
 
     // Expect inputs have correct values
     await expect(this.firstNameInput).toHaveValue(firstName);
     await expect(this.lastNameInput).toHaveValue(lastName);
     await expect(this.emailInput).toHaveValue(email);
-    await expect(this.ageInput).toHaveValue(age.toString());
-    await expect(this.salaryInput).toHaveValue(salary.toString());
+    await expect(this.ageInput).toHaveValue(age.toString()); // Verify age input has the string value
+    await expect(this.salaryInput).toHaveValue(salary.toString()); // Verify salary input has the string value
     await expect(this.departmentInput).toHaveValue(department);
   }
 
+  // Submits the employee form and waits for the table to be visible.
   async submitForm() {
     await this.submitButton.click();
     await expect(this.table).toBeVisible();

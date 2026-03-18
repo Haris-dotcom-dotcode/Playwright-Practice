@@ -1,3 +1,4 @@
+// Import Playwright test utilities and page object classes for table and UI interactions.
 import { test, expect } from "@playwright/test";
 import { only } from "node:test";
 import { VerifyCellPage } from "../pages/verifyCellPage";
@@ -11,22 +12,27 @@ import { ModalsPage } from "../pages/Modals";
 import { TablePage } from "../pages/tableTraversing";
 import { AddEmployeePage } from "../pages/AddRow";
 
+// Test suite for table-related functionalities.
 test.describe("Tables", () => {
+  // Verifies specific cell values in the table using the VerifyCellPage.
   test("verify cell values in the table", async ({ page }) => {
     const verifyCell = new VerifyCellPage(page);
     await verifyCell.runFullVerification();
   });
 
+  // Deletes rows by first names and verifies the deletions.
   test("delete a row by first name using function", async ({ page }) => {
     const deletePage = new DeleteRowPage(page);
     await deletePage.deleteRows(["Cierra", "Alden"]);
   });
 
+  // Extracts and sorts a specific column numerically.
   test("extract and sort a column", async ({ page }) => {
     const sortColumn = new SortColumnPage(page);
     await sortColumn.extractAndSortColumn(4);
   });
 
+  // Filters the table by various search terms and verifies the results.
   test("filter table by any column and verify results", async ({ page }) => {
     const searchTable = new SearchTablePage(page);
     await searchTable.searchAndVerify("Cierra");
@@ -37,11 +43,13 @@ test.describe("Tables", () => {
     await searchTable.searchAndVerify("cierra@example.com");
   });
 
+  // Extracts the entire table data as an array of objects.
   test("extract entire table as objects", async ({ page }) => {
     const extractTable = new ExtractTablePage(page);
     await extractTable.extractTable();
   });
 
+  // Edits a row by first name with new data.
   test("edit a row", async ({ page }) => {
     const editPage = new EditRowPage(page);
 
@@ -53,6 +61,7 @@ test.describe("Tables", () => {
     });
   });
 
+  // Handles all types of alerts and modals using page objects.
   test("handle all alerts and modals via POM", async ({ page }) => {
     const alertsPage = new AlertsPage(page);
     await alertsPage.navigate();
@@ -64,6 +73,7 @@ test.describe("Tables", () => {
   });
 
   //Tuesday
+  // Validates the salary for a specific first name in the table.
   test("Validate salary by first name", async ({ page }) => {
     const tablePage = new TablePage(page);
 
@@ -73,6 +83,7 @@ test.describe("Tables", () => {
     await tablePage.validateSalaryByFirstName("Cierra", 10000);
   });
 
+  // Adds a new employee and verifies the addition (runs only this test).
   test.only("Add and verify employee", async ({ page }) => {
     const addPage = new AddEmployeePage(page);
 

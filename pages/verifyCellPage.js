@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 export class VerifyCellPage {
+  // Initializes the VerifyCellPage with URL and table locators.
   constructor(page) {
     this.page = page;
     this.url = "https://demoqa.com/webtables";
@@ -18,11 +19,11 @@ export class VerifyCellPage {
   }
 
   async getCellValuesFromRow(row) {
-    const cells = row.locator("td");
-    const values = [];
-    const count = await cells.count();
-    for (let i = 0; i < count; i++) {
-      values.push((await cells.nth(i).textContent()).trim());// capturing data using loop
+    const cells = row.locator("td"); // Locate all td elements in the row
+    const values = []; // Initialize array for cell values
+    const count = await cells.count(); // Get number of cells
+    for (let i = 0; i < count; i++) { // Loop through each cell
+      values.push((await cells.nth(i).textContent()).trim()); // Get text content, trim, and push to array
     }
     return values;
   }
@@ -30,14 +31,14 @@ export class VerifyCellPage {
   async verifyCellValue(rowText, expectedValue) {
     const row = await this.getRowByText(rowText);
     const cells = await this.getCellValuesFromRow(row);// capturing data using function and reciving data in array
-    const match = cells.includes(expectedValue);
+    const match = cells.includes(expectedValue); // Check if array includes the expected value
     expect(match).toBeTruthy();
   }
 
   async printTable() {
-    const tableText = await this.table.allTextContents();
+    const tableText = await this.table.allTextContents(); // Get all text content from the table
     console.log("Table Text:", tableText);//displaying data in console
-    const rowTexts = await this.rows.allTextContents();
+    const rowTexts = await this.rows.allTextContents(); // Get all text content from rows
     console.log("Row Texts:", rowTexts);//displaying data in console
   }
 

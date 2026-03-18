@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 export class EditRowPage {
+  // Initializes the EditRowPage with table and row locators for the demoqa webtables.
   constructor(page) {
     this.page = page;
     this.url = "https://demoqa.com/webtables";
@@ -10,11 +11,13 @@ export class EditRowPage {
     this.rows = this.table.locator("tbody tr");
   }
 
+  // Navigates to the webtables page and waits for the table rows to load.
   async navigate() {
     await this.page.goto(this.url);
     await this.rows.first().waitFor();
   }
 
+  // Edits a table row by first name with new data, filling the modal form and submitting.
   async editRow(firstName, newData) {
     
     const row = this.rows.filter({ hasText: firstName }).first();
@@ -27,7 +30,7 @@ export class EditRowPage {
     await modal.waitFor({ state: "visible" });
 
     
-    for (const [field, value] of Object.entries(newData)) {
+    for (const [field, value] of Object.entries(newData)) { // Iterate over key-value pairs in newData object
       const input = this.page.locator(`input#${field}`);
       await input.fill(value);
     }
