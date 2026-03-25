@@ -11,6 +11,10 @@ import { AlertsPage } from "../pages/Alerts";
 import { ModalsPage } from "../pages/Modals";
 import { TablePage } from "../pages/tableTraversing";
 import { AddEmployeePage } from "../pages/AddRow";
+import { LoginPage } from "../pages/LoginPage";
+import FileUploadPage from "../pages/Fileupload";
+import WindowsPage from "../pages/WindowsPage";
+import { PIMPage } from "../pages/PIMpage";
 
 // Test suite for table-related functionalities.
 test.describe("Tables", () => {
@@ -72,7 +76,6 @@ test.describe("Tables", () => {
     await modalsPage.handleModals();
   });
 
-  //Tuesday
   // Validates the salary for a specific first name in the table.
   test("Validate salary by first name", async ({ page }) => {
     const tablePage = new TablePage(page);
@@ -83,19 +86,24 @@ test.describe("Tables", () => {
     await tablePage.validateSalaryByFirstName("Cierra", 10000);
   });
 
-  // Adds a new employee and verifies the addition (runs only this test).
-  test.only("Add and verify employee", async ({ page }) => {
-    const addPage = new AddEmployeePage(page);
+  test("upload file", async ({ page }) => {
+    const upload = new FileUploadPage(page);
 
-    await addPage.navigate();
+    await upload.uploadFileWrapper(upload.filePath);
+  });
 
-    await addPage.addEmployeeAndVerify({
-      firstName: "Saboor",
-      lastName: "Ahmad",
-      email: "name@exmaple.com",
-      age: 24,
-      salary: 80000,
-      department: "IT",
-    });
+  test("Multiple tab handling ", async ({ page }) => {
+    const windowsPage = new WindowsPage(page);
+    await windowsPage.handleMultiTabFlow();
+  });
+
+  test.only("delete preferred employee", async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.performLogin("Admin", "admin123");
+    const pimPage = new PIMPage(page);
+    await pimPage.goToPIMPage();
+    await pimPage.captureAllRows();
+    await pimPage.selectFirstNRows();
+    await pimPage.deleteSelected();
   });
 });
