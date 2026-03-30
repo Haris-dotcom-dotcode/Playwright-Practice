@@ -30,9 +30,7 @@ class FileUploadPage {
   }
 
   async submit() {
-    await this.page.waitForTimeout(3000); 
     await this.uploadButton.click();
-    await this.page.waitForTimeout(3000); 
   }
 
   async verifyUpload(fileName) {

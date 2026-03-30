@@ -1,6 +1,6 @@
 // Import Playwright test utilities and page object classes for table and UI interactions.
-import { test, expect } from "@playwright/test";
-import { only } from "node:test";
+import 'dotenv/config';
+import { test, expect, chromium } from "@playwright/test";
 import { VerifyCellPage } from "../pages/verifyCellPage";
 import { DeleteRowPage } from "../pages/deleteRowPage";
 import { SortColumnPage } from "../pages/sortColumnPage";
@@ -12,9 +12,11 @@ import { ModalsPage } from "../pages/Modals";
 import { TablePage } from "../pages/tableTraversing";
 import { AddEmployeePage } from "../pages/AddRow";
 import { LoginPage } from "../pages/LoginPage";
-import FileUploadPage from "../pages/Fileupload";
-import WindowsPage from "../pages/WindowsPage";
-import { PIMPage } from "../pages/PIMpage";
+import { FileUploadPage } from "../pages/Fileupload";
+import { WindowsPage } from "../pages/WindowsPage";
+import { CheckedDeletion } from "../pages/CheckedDeletion";
+import { RowWiseDeletion } from "../pages/RowWiseDeletion";
+import { MultiWindowFixturePage } from "../pages/MultiWindowFixturePage";
 
 // Test suite for table-related functionalities.
 test.describe("Tables", () => {
@@ -36,7 +38,7 @@ test.describe("Tables", () => {
     await sortColumn.extractAndSortColumn(4);
   });
 
-  // Filters the table by various search terms and verifies the results.
+  
   test("filter table by any column and verify results", async ({ page }) => {
     const searchTable = new SearchTablePage(page);
     await searchTable.searchAndVerify("Cierra");
@@ -81,8 +83,6 @@ test.describe("Tables", () => {
     const tablePage = new TablePage(page);
 
     await tablePage.navigate();
-
-    // Validate salary with simple logs
     await tablePage.validateSalaryByFirstName("Cierra", 10000);
   });
 
@@ -97,13 +97,34 @@ test.describe("Tables", () => {
     await windowsPage.handleMultiTabFlow();
   });
 
-  test.only("delete preferred employee", async ({ page }) => {
+  test("delete checked rows", async ({ page }) => {
+    console.log("[Test] checked deletion test started");
     const loginPage = new LoginPage(page);
-    await loginPage.performLogin("Admin", "admin123");
-    const pimPage = new PIMPage(page);
-    await pimPage.goToPIMPage();
-    await pimPage.captureAllRows();
-    await pimPage.selectFirstNRows();
-    await pimPage.deleteSelected();
+    const checkedDeletion = new CheckedDeletion(page);
+
+    await loginPage.performLogin(process.env.USER_NAME, process.env.PASSWORD);
+    console.log("[Test] logged in successfully");
+
+    await checkedDeletion.deleteFirstNCheckedRows();
+    console.log("[Test] checked deletion test completed");
+  });
+
+  test("row-wise deletion", async ({ page }) => {
+    console.log("[Test] row-wise deletion test started");
+    const loginPage = new LoginPage(page);
+    const deletionPage = new RowWiseDeletion(page);
+
+    await loginPage.performLogin(process.env.USER_NAME, process.env.PASSWORD);
+    console.log("[Test] logged in successfully");
+
+    await deletionPage.deleteFirstNRows(3);
+    console.log("[Test] row-wise deletion test completed");
+  });
+
+  test("multi-window handling", async ({
+    page,
+  }) => {
+    const multiWindowFixturePage = new MultiWindowFixturePage(page);
+    await multiWindowFixturePage.handleMultiWindow();
   });
 });

@@ -1,11 +1,9 @@
 import { expect } from '@playwright/test';
 
 export class AddEmployeePage {
-  // Initializes the AddEmployeePage with page locators for form and table elements.
+  
   constructor(page) {
     this.page = page;
-
-    // Form locators
     this.addButton = page.getByRole('button', { name: 'Add' });
     this.firstNameInput = page.getByRole('textbox', { name: 'First Name' });
     this.lastNameInput = page.getByRole('textbox', { name: 'Last Name' });

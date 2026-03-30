@@ -25,7 +25,6 @@ export class DeleteRowPage {
     await deleteButton.click();
 
     
-    await this.page.waitForTimeout(500);
     console.log(`Deleted row with First Name: ${firstName}`);
   }
 

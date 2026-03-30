@@ -35,7 +35,6 @@ export class AlertsPage {
       dialog.accept();
     });
     await this.timerAlertButton.click();
-    await this.page.waitForTimeout(6000); 
   }
 
   // Handles a confirm alert by accepting or dismissing based on the accept parameter.

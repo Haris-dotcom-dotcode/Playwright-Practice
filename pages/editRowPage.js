@@ -23,7 +23,6 @@ export class EditRowPage {
     const row = this.rows.filter({ hasText: firstName }).first();
     const editButton = row.locator("span[title='Edit']");
     await editButton.click();
-    await this.page.waitForTimeout(5000);
 
     
     const modal = this.page.locator(".modal-content");
@@ -37,11 +36,8 @@ export class EditRowPage {
 
     
     const submitButton = this.page.locator("button#submit");
-    await this.page.waitForTimeout(5000);
     await submitButton.click();
-    await this.page.waitForTimeout(5000);
     await this.rows.first().waitFor();
     console.log(`Edited row with First Name: ${firstName}`);
-    await this.page.waitForTimeout(5000);
   }
 }

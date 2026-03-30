@@ -29,7 +29,6 @@ class WindowsPage {
     await expect(
       newPage.getByRole('heading', { name: 'New Window' })
     ).toBeVisible();
-    await this.page.waitForTimeout(4000);
     console.log("New tab validated");
   }
 
@@ -37,8 +36,6 @@ class WindowsPage {
     await this.page.bringToFront();
 
     await expect(this.mainPageHeading).toBeVisible();
-    await this.page.waitForTimeout(4000);
-    console.log("Back to main tab");
   }
 
   // ---------------- WRAPPER ----------------
