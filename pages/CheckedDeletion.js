@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { safeClick } from "../utils/actionUtils";
 
 export class CheckedDeletion {
   constructor(page) {
@@ -48,7 +49,7 @@ export class CheckedDeletion {
   // Click delete button and confirm
   async clickDeleteButton() {
     console.log(" [CD] Clicking delete button for selected rows");
-    await this.deleteButton.click();
+    await safeClick(this.deleteButton);//util function to handle click with wait
     console.log(" [CD] Confirm delete dialog appeared");
     await expect(this.confirmDeleteButton).toBeVisible();
     console.log(" [CD] Clicking confirm delete button");

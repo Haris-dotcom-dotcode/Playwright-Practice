@@ -25,7 +25,7 @@ export class AlertsPage {
       console.log("Simple Alert message:", dialog.message());
       dialog.accept();
     });
-    await this.alertButton.click();
+    await safeClick(this.alertButton); //util function to handle click with wait
   }
 
   // Handles a delayed alert by waiting and then accepting it with logging.
@@ -34,7 +34,7 @@ export class AlertsPage {
       console.log("Delayed Alert message:", dialog.message());
       dialog.accept();
     });
-    await this.timerAlertButton.click();
+    await safeClick(this.timerAlertButton); //util function to handle click with wait
   }
 
   // Handles a confirm alert by accepting or dismissing based on the accept parameter.
@@ -44,7 +44,7 @@ export class AlertsPage {
       if (accept) dialog.accept(); // If accept is true, accept the dialog
       else dialog.dismiss(); // Otherwise, dismiss it
     });
-    await this.confirmButton.click();
+    await safeClick(this.confirmButton); //util function to handle click with wait
   }
 
   // Handles a prompt alert by providing the specified input text.
@@ -53,7 +53,7 @@ export class AlertsPage {
       console.log("Prompt Alert message:", dialog.message());
       dialog.accept(inputText); // Accept the prompt with the input text
     });
-    await this.promptButton.click();
+    await safeClick(this.promptButton); //util function to handle click with wait
   }
 
   // Executes all alert handling methods in sequence for comprehensive testing.
@@ -70,6 +70,6 @@ export class AlertsPage {
   console.log("Handling Prompt Alert...");
   await this.handlePromptAlert("Test Input");
 
-  console.log("All alerts handled ✅");
+  console.log("All alerts handled ✅");   
 }
 }

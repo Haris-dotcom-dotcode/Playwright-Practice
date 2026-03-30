@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { safeClick } from "../utils/actionUtils";
 
 export class RowWiseDeletion {
   constructor(page) {
@@ -20,7 +21,7 @@ export class RowWiseDeletion {
   // Navigate to employee list
   async gotoPIM() {
     console.log("[RWD] Navigating to PIM page");
-    await this.pimLink.click();
+    await safeClick(this.pimLink);  // Use safeClick to ensure the link is interactable
     await expect(this.rows.first()).toBeVisible({ timeout: 15000 });
     console.log("[RWD] PIM page loaded, rows visible");
   }
@@ -32,11 +33,12 @@ export class RowWiseDeletion {
 
     const deleteBtn = this.deleteButtonInRow(rowLocator);
     await deleteBtn.scrollIntoViewIfNeeded();
-    await deleteBtn.click();
+    await safeClick (deleteBtn); // Use safeClick to ensure the button is interactable
 
     console.log("[RWD] Delete confirmation dialog appeared");
     await expect(this.confirmDeleteButton).toBeVisible({ timeout: 5000 });
-    await this.confirmDeleteButton.click();
+    await safeClick(this.confirmDeleteButton); // Use safeClick for confirmation as well
+    console.log("[RWD] Confirmed deletion");
 
     await expect(this.toastMessage).toBeVisible({ timeout: 10000 });
     console.log(`[RWD] Row ID ${id} deleted, toast message visible`);

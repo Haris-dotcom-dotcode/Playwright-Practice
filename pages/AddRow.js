@@ -1,4 +1,6 @@
 import { expect } from '@playwright/test';
+import { safeClick } from '../utils/actionUtils';
+import { getText } from '../utils/textUtils';
 
 export class AddEmployeePage {
   
@@ -25,7 +27,7 @@ export class AddEmployeePage {
 
   // Clicks the add button to open the employee addition form.
   async openAddForm() {
-    await this.addButton.click();
+    await safeClick(this.addButton); //util function to handle click with wait
     await expect(this.firstNameInput).toBeVisible();
   }
 
@@ -34,22 +36,22 @@ export class AddEmployeePage {
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
     await this.emailInput.fill(email);
-    await this.ageInput.fill(age.toString()); // Convert age number to string for input filling
-    await this.salaryInput.fill(salary.toString()); // Convert salary number to string for input filling
+    await this.ageInput.fill(age.toString()); 
+    await this.salaryInput.fill(salary.toString());
     await this.departmentInput.fill(department);
 
     // Expect inputs have correct values
     await expect(this.firstNameInput).toHaveValue(firstName);
     await expect(this.lastNameInput).toHaveValue(lastName);
     await expect(this.emailInput).toHaveValue(email);
-    await expect(this.ageInput).toHaveValue(age.toString()); // Verify age input has the string value
-    await expect(this.salaryInput).toHaveValue(salary.toString()); // Verify salary input has the string value
+    await expect(this.ageInput).toHaveValue(age.toString()); 
+    await expect(this.salaryInput).toHaveValue(salary.toString()); 
     await expect(this.departmentInput).toHaveValue(department);
   }
 
   // Submits the employee form and waits for the table to be visible.
   async submitForm() {
-    await this.submitButton.click();
+    await safeClick(this.submitButton); //util function to handle click with wait
     await expect(this.table).toBeVisible();
   }
 
@@ -58,33 +60,52 @@ export class AddEmployeePage {
   const row = this.table.locator('tbody tr').filter({ hasText: fullName });
 
   console.log('Waiting for row to appear in table...');
-  await row.waitFor({ state: 'visible', timeout: 10000 }); // Wait up to 10s
+  await row.waitFor({ state: 'visible', timeout: 10000 });
 
   console.log('Row is visible, verifying cells...');
-  await expect(row.locator('td').nth(0)).toHaveText(firstName);
-  await expect(row.locator('td').nth(1)).toHaveText(lastName);
-  await expect(row.locator('td').nth(2)).toHaveText(age.toString());
-  await expect(row.locator('td').nth(3)).toHaveText(email);
-  await expect(row.locator('td').nth(4)).toHaveText(salary.toString());
-  await expect(row.locator('td').nth(5)).toHaveText(department);
 
-  console.log('Employee added and verified ✅');
+  const firstNameText = await getText(row.locator('td').nth(0));
+  const lastNameText = await getText(row.locator('td').nth(1));
+  const ageText = await getText(row.locator('td').nth(2));
+  const emailText = await getText(row.locator('td').nth(3));
+  const salaryText = await getText(row.locator('td').nth(4));
+  const departmentText = await getText(row.locator('td').nth(5));
+
+  expect(firstNameText).toBe(firstName);
+  expect(lastNameText).toBe(lastName);
+  expect(ageText).toBe(age.toString());
+  expect(emailText).toBe(email);
+  expect(salaryText).toBe(salary.toString());
+  expect(departmentText).toBe(department);
+
+  console.log('Employee added and verified successfully!');
 }
 
   // ----- Wrapper Function for Test -----
-  async addEmployeeAndVerify(data) {
-    console.log('Opening Add Employee form...');
-    await this.openAddForm();
+  async addEmployeeAndVerify() {
+  await this.navigate(); 
 
-    console.log('Filling employee details...');
-    await this.fillForm(data);
+  const data = {
+    firstName: process.env.FIRST_NAME,
+    lastName: process.env.LAST_NAME,
+    email: process.env.EMAIL,
+    age: Number(process.env.AGE),
+    salary: Number(process.env.SALARY),
+    department: process.env.DEPARTMENT
+  };
 
-    console.log('Submitting form...');
-    await this.submitForm();
+  console.log('Opening Add Employee form...');
+  await this.openAddForm();
 
-    console.log('Verifying employee in table...');
-    await this.verifyEmployeeAdded(data);
+  console.log('Filling employee details...');
+  await this.fillForm(data);
 
-    console.log('Employee added and verified ✅');
-  }
+  console.log('Submitting form...');
+  await this.submitForm();
+
+  console.log('Verifying employee in table...');
+  await this.verifyEmployeeAdded(data);
+
+  console.log('Employee added and verified successfully!');
+}
 }

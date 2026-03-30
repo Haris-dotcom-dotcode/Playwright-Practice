@@ -1,5 +1,5 @@
 // Import Playwright test utilities and page object classes for table and UI interactions.
-import 'dotenv/config';
+import "dotenv/config";
 import { test, expect, chromium } from "@playwright/test";
 import { VerifyCellPage } from "../pages/verifyCellPage";
 import { DeleteRowPage } from "../pages/deleteRowPage";
@@ -20,6 +20,16 @@ import { MultiWindowFixturePage } from "../pages/MultiWindowFixturePage";
 
 // Test suite for table-related functionalities.
 test.describe("Tables", () => {
+  // ADD
+  test("Add employee", async ({ page }) => {
+    const addEmployee = new AddEmployeePage(page);
+    await addEmployee.addEmployeeAndVerify();
+  });
+  // EDIT
+  test("edit a row", async ({ page }) => {
+    const editPage = new EditRowPage(page);
+    await editPage.editRowAndVerify();
+  });
   // Verifies specific cell values in the table using the VerifyCellPage.
   test("verify cell values in the table", async ({ page }) => {
     const verifyCell = new VerifyCellPage(page);
@@ -38,9 +48,9 @@ test.describe("Tables", () => {
     await sortColumn.extractAndSortColumn(4);
   });
 
-  
-  test("filter table by any column and verify results", async ({ page }) => {
+  test.only("filter table by any column and verify results", async ({ page }) => {
     const searchTable = new SearchTablePage(page);
+
     await searchTable.searchAndVerify("Cierra");
     await searchTable.searchAndVerify("Vega");
     await searchTable.searchAndVerify("39");
@@ -53,18 +63,6 @@ test.describe("Tables", () => {
   test("extract entire table as objects", async ({ page }) => {
     const extractTable = new ExtractTablePage(page);
     await extractTable.extractTable();
-  });
-
-  // Edits a row by first name with new data.
-  test("edit a row", async ({ page }) => {
-    const editPage = new EditRowPage(page);
-
-    await editPage.navigate();
-
-    await editPage.editRow("Cierra", {
-      salary: "15000",
-      department: "IT",
-    });
   });
 
   // Handles all types of alerts and modals using page objects.
@@ -121,9 +119,7 @@ test.describe("Tables", () => {
     console.log("[Test] row-wise deletion test completed");
   });
 
-  test("multi-window handling", async ({
-    page,
-  }) => {
+  test("multi-window handling", async ({ page }) => {
     const multiWindowFixturePage = new MultiWindowFixturePage(page);
     await multiWindowFixturePage.handleMultiWindow();
   });

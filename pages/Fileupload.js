@@ -30,7 +30,7 @@ class FileUploadPage {
   }
 
   async submit() {
-    await this.uploadButton.click();
+    await safeClick(this.uploadButton); //util function to handle click with wait 
   }
 
   async verifyUpload(fileName) {

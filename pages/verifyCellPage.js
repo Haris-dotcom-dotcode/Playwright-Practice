@@ -23,7 +23,7 @@ export class VerifyCellPage {
     const values = []; // Initialize array for cell values
     const count = await cells.count(); // Get number of cells
     for (let i = 0; i < count; i++) { // Loop through each cell
-      values.push((await cells.nth(i).textContent()).trim()); // Get text content, trim, and push to array
+      values.push(await getText(cells.nth(i))); // util function to get text content, trim, and push to array
     }
     return values;
   }

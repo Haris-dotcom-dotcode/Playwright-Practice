@@ -15,11 +15,11 @@ export class ModalsPage {
 
   // Handles small and large modals by opening and closing them sequentially.
   async handleModals() {
-    await this.smallModalBtn.click();
+    await safeClick(this.smallModalBtn); //util function to handle click with wait
     await this.closeBtn.click();
 
-    await this.largeModalBtn.click();
+    await safeClick(this.largeModalBtn); //util function to handle click with wait
     await this.page.getByText("Lorem Ipsum is simply dummy").click(); // Click on the text inside the large modal
-    await this.closeBtn.click();
+    await safeClick(this.closeBtn); //util function to handle click with wait
   }
 }

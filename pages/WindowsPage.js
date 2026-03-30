@@ -1,4 +1,5 @@
 const { expect } = require('@playwright/test');
+const { safeClick } = require('../utils/actionUtils');
 
 class WindowsPage {
   constructor(page) {
@@ -18,7 +19,7 @@ class WindowsPage {
   async openNewTab() {
     const [newPage] = await Promise.all([
       this.page.waitForEvent('popup'),
-      this.openTabLink.click(),
+      safeClick(this.openTabLink) // Use safeClick to ensure the link is interactable,
     ]);
 
     await newPage.waitForLoadState();

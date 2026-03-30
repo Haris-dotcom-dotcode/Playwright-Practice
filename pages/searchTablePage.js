@@ -1,7 +1,6 @@
-import { expect } from "@playwright/test";
+import { verifyTableRowsContain } from "../utils/tableUtils";
 
 export class SearchTablePage {
-  // Initializes the SearchTablePage with table, rows, and search box locators.
   constructor(page) {
     this.page = page;
     this.table = page.locator("table.-striped.-highlight.table.table-striped.table-bordered.table-hover");
@@ -9,16 +8,17 @@ export class SearchTablePage {
     this.searchBox = page.getByRole('textbox', { name: 'Type to search' });
   }
 
-  // Searches the table with a value and verifies that all visible rows contain the search term.
-  async searchAndVerify(searchValue) {
+  async navigate() {
     await this.page.goto("https://demoqa.com/webtables");
+  }
+
+  // Wrapper method still called in the test
+  async searchAndVerify(searchValue) {
+    await this.navigate();
     await this.searchBox.fill(searchValue);
     await this.rows.first().waitFor();
-    
-    const visibleRows = await this.rows.allTextContents();
-    console.log(`Search term: "${searchValue}"`);
-    console.log("Visible rows:", visibleRows);
-    const allMatch = visibleRows.every(row => row.includes(searchValue)); // Check if every row includes the search value
-    expect(allMatch).toBeTruthy();
+
+    // 🔥 Call the reusable util method
+    await verifyTableRowsContain(this.rows, searchValue);
   }
 }

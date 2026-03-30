@@ -51,7 +51,7 @@ export class MultiWindowFixturePage{
     const URL = 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login';
     await this.navigateTo(URL);
     const newPage = await this.waitForNewWindow(
-      () => this.orangehrmLink.click()
+      () => safeClick(this.orangehrmLink)
     );
     await this.closeWindowAndReturnToMain(newPage);
   }

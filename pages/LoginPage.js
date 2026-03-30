@@ -18,7 +18,7 @@ export class LoginPage {
   await this.username.fill(user);
   await this.password.fill(pass);
 
-  await this.loginBtn.click(); 
+  await safeClick(this.loginBtn); //util function to handle click with wait
 }
 
   //wrapper fucntion

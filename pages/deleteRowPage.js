@@ -6,7 +6,7 @@ export class DeleteRowPage {
     this.page = page;
     this.url = "https://demoqa.com/webtables";
     this.table = page.locator(
-      "table.-striped.-highlight.table.table-striped.table-bordered.table-hover"
+      "table.-striped.-highlight.table.table-striped.table-bordered.table-hover",
     );
   }
 
@@ -22,9 +22,8 @@ export class DeleteRowPage {
     const rows = this.table.locator("tbody tr");
     const row = rows.filter({ hasText: firstName }).first();
     const deleteButton = row.locator("span[title='Delete']");
-    await deleteButton.click();
+    await safeClick(deleteButton); //  util function to handle click with wait
 
-    
     console.log(`Deleted row with First Name: ${firstName}`);
   }
 
@@ -35,13 +34,19 @@ export class DeleteRowPage {
     let currentRows = await this.table.locator("tbody tr").allTextContents();
     console.log("Rows before deletion:", currentRows);
 
-    for (const name of firstNames) { // Loop through each first name to delete
+    for (const name of firstNames) {
+      // Loop through each first name to delete
       await this.#deleteSingleRow(name);
 
       currentRows = await this.table.locator("tbody tr").allTextContents();
+      currentRows = [];
+      for (let i = 0; i < (await rows.count()); i++) {
+        const firstCell = rows.nth(i).locator("td").nth(0);
+        currentRows.push(await getText(firstCell)); // 🔥 get updated first names
+      }
 
       console.log(`Rows after deleting "${name}":`, currentRows);
-      expect(currentRows.some(text => text.includes(name))).toBeFalsy(); // Assert no row contains the deleted name
+      expect(currentRows.some((text) => text.includes(name))).toBeFalsy(); // Assert no row contains the deleted name
     }
   }
 }
